@@ -8,17 +8,26 @@ import {Container, Input, Button, ButtonText, Error} from './styles';
 class Login extends Component {
   state = {email: '', password: ''};
 
+  // handleChange = event => {
+  //   this.setState({
+  //     [event.target.name]: event.target.value
+  //   })
+  // }
+
   handleSubmit = async () => {
+    // event.preventDefault()
+    // userLoginFetch(this.state)
     const {email, password} = this.state;
     const {loginRequest} = this.props;
 
     loginRequest(email, password);
+    console.log(loginRequest);
   };
 
   render() {
     const {email, password} = this.state;
     const {error, loading, loginRequest} = this.props;
-    console.log(loginRequest())
+
 
     return (
       <Container>
@@ -54,12 +63,33 @@ class Login extends Component {
   }
 }
 
+// const userLoginFetch = user =>{
+//   return dispatch => {
+//     return fetch("https://localhost:3333/user", {
+//       method: "POST",
+//       headers:{
+//         'Content-Type': 'application/json',
+//         Accept: 'application/json'
+//       },
+//       body: JSON.stringify({user})
+//     })
+//     .then(resp => resp.json())
+//     .then(data => {
+//       if (data.message) {
+//         {error && <Error>Usuario inexistente</Error>}
+//       } else{
+//         localStorage.setItem("token", data.jwt)
+//         dispatch(loginRequest(data.user))
+//       }
+//     })
+//   }
+// }
+
 const mapStateToProps = state => ({
   error: state.login.error,
   loading: state.login.loading,
 });
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(LoginActions, dispatch);
+const mapDispatchToProps = LoginActions;
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

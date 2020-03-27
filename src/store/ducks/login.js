@@ -1,47 +1,37 @@
-export const Types = {
-  REQUEST: 'LOGIN_REQUEST',
-  SUCCESS: 'LOGIN_SUCCESS',
-  FAILURE: 'LOGIN_FAILURE',
-};
+import {createReducer, createActions} from 'reduxsauce';
+
+export const {Types, Creators} = createActions({
+  loginRequest: [],
+  loginSuccess: ['email', 'password'],
+  loginFailure: [],
+});
 
 const INITIAL_STATE = {
-  email: null,
-  password: null,
   loading: false,
   error: false,
 };
 
-export default function login(state = INITIAL_STATE, action) {
-  switch (action.type) {
-    case Types.REQUEST:
-      return {...state, loading: true};
-    case Types.SUCCESS:
-      return {
-        ...state,
-        email: action.payload.email,
-        password: action.payload.password,
-        error: false,
-        loading: false,
-      };
-    case Types.FAILURE:
-      return {...state, error: true};
-    default:
-      return state;
-  }
-}
+const loginRequest = (state) => ({
+  ...state,
+  loading: true,
+  error: false,
+});
+const loginSuccess = (state, action) => ({
+  ...state,
+  email: action.email,
+  password: action.password,
+  loading: false,
+  error: false,
+});
 
-export const Creators = {
-  loginRequest: (email, password) => ({
-    type: Types.REQUEST,
-    payload: {email, password},
-  }),
+const loginFailure = (state, action) => ({
+  ...state,
+  loading: false,
+  error: true,
+});
 
-  loginSuccess: (email, password) => ({
-    type: Types.SUCCESS,
-    payload: {email, password},
-  }),
-
-  loginFailure: () => ({
-    type: Types.FAILURE,
-  }),
-};
+export default createReducer(INITIAL_STATE, {
+  [Types.LOGIN_REQUEST]: loginRequest,
+  [Types.LOGIN_SUCCESS]: loginSuccess,
+  [Types.LOGIN_FAILURE]: loginFailure,
+});
